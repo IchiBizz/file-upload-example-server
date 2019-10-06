@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const cors = require("cors");
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express      = require('express');
@@ -23,6 +24,12 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+
+// allow access to the API from different domains/origins
+app.use(cors({
+  // this could be multiple domains/origins, but we will allow just our React app
+  origin: [ "http://localhost:3000" ]
+}));
 
 // Middleware Setup
 app.use(logger('dev'));
@@ -60,7 +67,7 @@ app.use('/', index);
 // include your new routes here:
 app.use('/api', require('./routes/thing-routes'));
 
-// Cloudinary
+// Uploader for Cloudinary
 app.use('/api', require('./routes/file-upload-routes'));
 
 
